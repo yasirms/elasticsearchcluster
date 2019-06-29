@@ -27,4 +27,56 @@ metadata:
                 env: dev
 ```
 
-##
+##  Creating new Services
+
+file: 02-service.yml
+
+```shell
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: picnic
+  name: elasticsearch
+  labels:
+    env: dev
+spec:
+  type: ClusterIP
+  selector:
+    app: elasticsearch-client
+  ports:
+  - name: http
+    port: 9200
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: picnic
+  name: elasticsearch-data
+  labels:
+    env: dev
+spec:
+  clusterIP: None
+  selector:
+    app: elasticsearch-data
+  ports:
+  - port: 9300
+    name: transport
+ ---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: picnic
+  name: elasticsearch-discovery
+  labels:
+    env: dev
+spec:
+  selector:
+    app: elasticsearch-master
+  ports:
+  - name: transport
+    port: 9300
+    protocol: TCP
+
+```
